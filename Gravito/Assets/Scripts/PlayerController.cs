@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     Rigidbody playerRb;
     Animator playerAnim;
+
+    float defaultAnimSpeed = 1f;
 
     float speed;
     [SerializeField] float walkSpeed = 1;
@@ -31,6 +34,9 @@ public class PlayerController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
+
+        if (playerAnim == null) Debug.LogError("Animator is Null");
+
     }
 
     // Update is called once per frame
@@ -43,11 +49,9 @@ public class PlayerController : MonoBehaviour
         // Create vector3 movement with input
         movementInput = new Vector3(horizontalInput, 0f, verticalInput).normalized;
 
-        isMoving = movementInput.magnitude > 0.001f; // Check if the player is actually moving   //ternary ops
+        isMoving = movementInput.magnitude > 0.01f; // Check if the player is actually moving   //ternary ops
         isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift); //ternary ops
-
-        
-
+        if (!isMoving) playerAnim.speed = defaultAnimSpeed;
     }
 
     // FixedUpdate is good for physics-related updates
@@ -56,6 +60,8 @@ public class PlayerController : MonoBehaviour
         Walk();
         Run();
         
+
+
     }
 
     void Move()
@@ -71,7 +77,6 @@ public class PlayerController : MonoBehaviour
         {
             // Calculate rotation needed to face the movement direction
             // Vector3.up ensures the character stays upright
-            //Quaternion targetRotation = Quaternion.LookRotation(turnSpeed * movementInput, Vector3.up);
             Quaternion targetRotation = Quaternion.LookRotation(movementInput, Vector3.up);
             //smooth rotation
             Quaternion rotatePlayer = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
@@ -97,9 +102,10 @@ public class PlayerController : MonoBehaviour
             speed = walkSpeed;
             turnSpeed = walkTurnSpeed;
         }
+
         Move();
-        if (playerAnim != null) playerAnim.speed = 1.5f;
-        if (playerAnim != null) playerAnim.SetBool("IsMoving", isMoving);
+        playerAnim.speed = 1.5f;
+        playerAnim.SetBool("IsMoving", isMoving);
 
     }
 
@@ -110,17 +116,23 @@ public class PlayerController : MonoBehaviour
             speed = runSpeed;
             turnSpeed = runTurnSpeed;
         }
+
         Move();
-        if (playerAnim != null) playerAnim.speed = 0.8f;
-        if (playerAnim != null) playerAnim.SetBool("IsRunning", isRunning);
+        playerAnim.speed = 0.8f;
+        playerAnim.SetBool("IsRunning", isRunning);
+
     }
 
     void DoThisWhenRotating()
     {
         if (isRotating)
         {
-            if (playerAnim != null) playerAnim.speed = 2f;
-            if (playerAnim != null) playerAnim.SetBool("IsMoving", isMoving);
+            playerAnim.speed = 2f;
+            playerAnim.SetBool("IsMoving", isMoving);
+        }
+        else
+        {
+            playerAnim.speed = defaultAnimSpeed;
         }
     }
 }
