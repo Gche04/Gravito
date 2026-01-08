@@ -6,11 +6,11 @@ public class CameraController : MonoBehaviour
     GameObject player;
 
     Vector3 cameraOffset;
-    [SerializeField] Vector3 cameraDefaultOffset = new(0, 1.4f, -3f);
-    [SerializeField] Vector3 cameraBackwardOffset = new(0, 1.4f, -3f);
-    [SerializeField] Vector3 cameraVerticalviewOffset = new(0, 1.4f, -4f);
-    [SerializeField] Vector3 cameraHorizontalViewOffset = new(0, 1f, -6f);
-    [SerializeField] float cameraMoveSpeed = 10;
+    //[SerializeField] Vector3 cameraDefaultOffset = new(0, 1.4f, -3f);
+    [SerializeField] Vector3 cameraPlayerFrontViewOffset = new(0, 1.4f, -7f);
+    [SerializeField] Vector3 cameraPlayerBackViewOffset = new(0, 1.4f, -4f);
+    [SerializeField] Vector3 cameraSideViewOffset = new(0, 1f, -6f);
+    float cameraMoveSpeed = 10;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,15 +27,16 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (IsPlayerFacingCamera())
+        TogglePlayerDirToCamera();
+        SetCameraOffset();
+
+        if (GameObjectsManager.Instance.PlayerIsFlying)
         {
-            GameObjectsManager.Instance.SetPlayerIsFacingCamera(true);
+            cameraMoveSpeed = 50;
         }else
         {
-            GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
+            cameraMoveSpeed = 10;
         }
-
-        SetCameraOffset();
     }
 
     void LateUpdate()
@@ -54,19 +55,15 @@ public class CameraController : MonoBehaviour
 
     void SetCameraOffset()
     {
-        if (GameObjectsManager.Instance.PlayerIsOnHorizontalFloor)
+        if (GameObjectsManager.Instance.PlayerSideIsToCamera)
         {
-            cameraOffset = cameraHorizontalViewOffset;
-        }else if (GameObjectsManager.Instance.PlayerIsOnVerticalFloor)
+            cameraOffset = cameraSideViewOffset;
+        }else if (GameObjectsManager.Instance.PlayerIsBackingCamera)
         {
-            cameraOffset = cameraVerticalviewOffset;
+            cameraOffset = cameraPlayerBackViewOffset;
         }else if (GameObjectsManager.Instance.PlayerIsFacingCamera)
         {
-            cameraOffset = cameraBackwardOffset;
-        }
-        else
-        {
-            cameraOffset = cameraDefaultOffset;
+            cameraOffset = cameraPlayerFrontViewOffset;
         }
     }
 
@@ -87,7 +84,38 @@ public class CameraController : MonoBehaviour
 
         //Compare the dot product result with the threshold
         // If the dot product is greater than the threshold, the player is facing the camera within the defined angle.
-        
         return dotProduct > 0.5f;
+    }
+
+    bool IsPlayerBackingCamera()
+    {
+        Vector3 directionToCamera = (mainCamera.transform.position - player.transform.position).normalized;
+
+        Vector3 playerForward = player.transform.forward;
+
+        float dotProduct = Vector3.Dot(playerForward, directionToCamera);
+        
+        return dotProduct < -0.5f;
+    }
+
+    void TogglePlayerDirToCamera()
+    {
+        if (IsPlayerFacingCamera())
+        {
+            GameObjectsManager.Instance.SetPlayerIsFacingCamera(true);
+            GameObjectsManager.Instance.SetPlayerIsBackingCamera(false);
+            GameObjectsManager.Instance.SetPlayerSideIsToCamera(false);
+        }
+        else if (IsPlayerBackingCamera())
+        {
+            GameObjectsManager.Instance.SetPlayerIsBackingCamera(true);
+            GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
+            GameObjectsManager.Instance.SetPlayerSideIsToCamera(false);
+        }else
+        {
+            GameObjectsManager.Instance.SetPlayerSideIsToCamera(true);
+            GameObjectsManager.Instance.SetPlayerIsBackingCamera(false);
+            GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
+        }
     }
 }

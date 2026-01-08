@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Vertical Floor
   - Horizontal Floor
+  - Ground
   layers:
   - Default
   - TransparentFX

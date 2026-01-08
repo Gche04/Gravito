@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerCollusionManager : MonoBehaviour
 {
+    public bool isOnGround;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,16 +18,9 @@ public class PlayerCollusionManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Horizontal Floor"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            GameObjectsManager.Instance.SetPlayerIsOnHorizontalFloor(true);
-            GameObjectsManager.Instance.SetPlayerIsOnVerticalFloor(false);
-        }
-
-        if (collision.gameObject.CompareTag("Vertical Floor"))
-        {
-            GameObjectsManager.Instance.SetPlayerIsOnHorizontalFloor(false);
-            GameObjectsManager.Instance.SetPlayerIsOnVerticalFloor(true);
+            isOnGround = true;
         }
     }
 }

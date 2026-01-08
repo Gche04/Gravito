@@ -301,11 +301,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd1b8f6c741318d44ba1b83656616bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  cameraDefaultOffset: {x: 0, y: 1.4, z: -3}
-  cameraBackwardOffset: {x: 0, y: 1.4, z: -3}
-  cameraVerticalviewOffset: {x: 0, y: 1.4, z: -4}
-  cameraHorizontalViewOffset: {x: 0, y: 1, z: -6}
-  cameraMoveSpeed: 10
+  cameraPlayerFrontViewOffset: {x: 0, y: 1.4, z: -7}
+  cameraPlayerBackViewOffset: {x: 0, y: 1.4, z: -3}
+  cameraSideViewOffset: {x: 0, y: 1, z: -6}
 --- !u!4 &289104180
 Transform:
   m_ObjectHideFlags: 0
@@ -880,7 +878,7 @@ GameObject:
   - component: {fileID: 1016619960}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1186,8 +1184,10 @@ MonoBehaviour:
   walkTurnSpeed: 6
   runSpeed: 6
   runTurnSpeed: 24
-  flySpeed: 25
-  jumpForce: 5
+  flySpeed: 50
+  runJumpForce: 6
+  walkJumpForce: 2.5
+  idleJumpForce: 1
 --- !u!114 &1288015520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1200,6 +1200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2048228374744be49a3ef01b415dd2d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCollusionManager
+  isOnGround: 0
 --- !u!1001 &1633047045
 PrefabInstance:
   m_ObjectHideFlags: 0
