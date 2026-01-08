@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float walkTurnSpeed = 6;
     [SerializeField] float runSpeed = 8;
     [SerializeField] float runTurnSpeed = 24;
-    float flyTurnSpeed = 500;
+    float flyTurnSpeed = 100;
     float turnSpeed;
     [SerializeField] float flySpeed = 50;
     float jumpForce;
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private List<KeyCode> shiftKeys = new() { KeyCode.LeftShift, KeyCode.RightShift };
 
     Vector3 movementInput;
+    float initialXRot;
     float jetParkUpDownInput = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,6 +43,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerAnim == null) Debug.LogError("Animator is Null");
 
+        initialXRot = transform.eulerAngles.x;
     }
 
     // Update is called once per frame
@@ -78,6 +80,11 @@ public class PlayerController : MonoBehaviour
         isAirBorne = !playerCollusion.isOnGround; //|| isFlying;
         SetSpeed();
 
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            ToggleJetParkOnOff();
+        }
+
     }
 
     // FixedUpdate is good for physics-related updates
@@ -96,11 +103,6 @@ public class PlayerController : MonoBehaviour
             Idle();
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            ToggleJetParkOnOff();
-        }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
@@ -110,14 +112,20 @@ public class PlayerController : MonoBehaviour
         AirBorne();
     }
 
+    void LateUpdate()
+    {
+        Vector3 currentRot = transform.eulerAngles;
+        currentRot.x = initialXRot;
+        transform.eulerAngles = currentRot;
+    }
     void Move()
     {
         // Calculate the desired velocity
         Vector3 desiredVelocity = movementInput * speed;
 
         // Apply the velocity to the Rigidbody, maintaining existing Y velocity
-        //playerRb.linearVelocity = new Vector3(desiredVelocity.x, playerRb.linearVelocity.y, desiredVelocity.z);
-        playerRb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z);
+        
+        playerRb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z); //playerRb.linearVelocity.y
 
         // Make the player face the direction of movement
         if (movementInput.magnitude > 0.01f && !Input.GetKey(KeyCode.U) && !Input.GetKey(KeyCode.M))
@@ -213,12 +221,14 @@ public class PlayerController : MonoBehaviour
         if (useJetPark)
         {
             useJetPark = false;
+            GameObjectsManager.Instance.SetPlayerJetParkIsOn(false);
             Debug.Log("Jetpark is off");
         }
         else
         {
             useJetPark = true;
-            playerRb.AddForce(Vector3.up * 1.0f, ForceMode.Impulse);
+            GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
+            playerRb.AddForce(Vector3.up * 3.0f, ForceMode.Impulse);
             Debug.Log("Jetpark is on");
         }
     }

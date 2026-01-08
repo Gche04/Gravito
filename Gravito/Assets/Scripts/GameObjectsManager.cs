@@ -7,7 +7,7 @@ public class GameObjectsManager : MonoBehaviour
     public bool PlayerIsBackingCamera { get; private set; }
     public bool PlayerSideIsToCamera { get; private set; }
     public bool PlayerIsFacingCamera { get; private set; }
-    public bool PlayerIsFlying { get; private set; }
+    public bool PlayerJetParkIsOn { get; private set; }
 
     private void Awake()
     {
@@ -30,5 +30,5 @@ public class GameObjectsManager : MonoBehaviour
     public void SetPlayerSideIsToCamera(bool val) { PlayerSideIsToCamera = val; }
 
     public void SetPlayerIsFacingCamera(bool val) { PlayerIsFacingCamera = val; }
-    public void SetPlayerIsFlying(bool val) { PlayerIsFlying = val; }
+    public void SetPlayerJetParkIsOn(bool val) { PlayerJetParkIsOn = val; }
 }
