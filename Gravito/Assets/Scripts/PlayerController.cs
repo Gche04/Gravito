@@ -8,8 +8,6 @@ public class PlayerController : MonoBehaviour
     Animator playerAnim;
     PlayerCollusionManager playerCollusion;
 
-    float defaultAnimSpeed = 1f;
-
     float speed;
     [SerializeField] float walkSpeed = 1;
     [SerializeField] float walkTurnSpeed = 6;
@@ -19,13 +17,8 @@ public class PlayerController : MonoBehaviour
     float turnSpeed;
     [SerializeField] float flySpeed = 50;
     [SerializeField] float jumpForce = 10;
-    /*[SerializeField] float runJumpForce = 6;
-    [SerializeField] float walkJumpForce = 3f;
-    [SerializeField] float idleJumpForce = 1;*/
 
     bool isAirBorne = false;
-    //bool isIdleJump = false;
-    //bool hasJumped = false;
     bool useJetPark = false;
     bool hasFailed = false;
 
@@ -33,7 +26,6 @@ public class PlayerController : MonoBehaviour
     private List<KeyCode> shiftKeys = new() { KeyCode.LeftShift, KeyCode.RightShift };
 
     Vector3 movementInput;
-    float initialXRot;
     float jetParkUpDownInput = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,8 +36,6 @@ public class PlayerController : MonoBehaviour
         playerCollusion = GetComponent<PlayerCollusionManager>();
 
         if (playerAnim == null) Debug.LogError("Animator is Null");
-
-        initialXRot = transform.eulerAngles.x;
     }
 
     // Update is called once per frame
@@ -115,38 +105,24 @@ public class PlayerController : MonoBehaviour
         AirBorne();
     }
 
-    void LateUpdate()
-    {
-        Vector3 currentRot = transform.eulerAngles;
-        currentRot.x = initialXRot;
-        transform.eulerAngles = currentRot;
-    }
     void Move()
     {
         // Calculate the desired velocity
         Vector3 desiredVelocity = movementInput * speed;
 
-        // Apply the velocity to the Rigidbody, maintaining existing Y velocity
-
         playerRb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z); //playerRb.linearVelocity.y
 
         // Make the player face the direction of movement
-        if (movementInput.magnitude > 0.01f && !Input.GetKey(KeyCode.U) && !Input.GetKey(KeyCode.M))
+        if (jetParkUpDownInput == 0f && movementInput.magnitude > 0.01f)
         {
             // Calculate rotation needed to face the movement direction
             // Vector3.up ensures the character stays upright
-
-
             Quaternion targetRotation = Quaternion.LookRotation(movementInput, Vector3.up);
             //smooth rotation
             Quaternion rotatePlayer = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
 
             // Apply the rotation to the Rigidbody
             playerRb.MoveRotation(rotatePlayer);
-
-
-
-            //transform.rotation = Quaternion.Euler(0f, transform.rotation.y, 0f);
         }
     }
 
