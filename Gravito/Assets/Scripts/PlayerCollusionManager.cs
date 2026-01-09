@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerCollusionManager : MonoBehaviour
 {
     public bool isOnGround;
+    public bool  wasAirBorne;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,6 +30,7 @@ public class PlayerCollusionManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = false;
+            wasAirBorne = true;
         }
     }
 }

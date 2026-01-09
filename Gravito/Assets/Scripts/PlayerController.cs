@@ -9,16 +9,16 @@ public class PlayerController : MonoBehaviour
     PlayerCollusionManager playerCollusion;
 
     float speed;
-    [SerializeField] float walkSpeed = 1;
-    [SerializeField] float walkTurnSpeed = 6;
+    [SerializeField] float walkSpeed = 2;
     [SerializeField] float runSpeed = 8;
+    [SerializeField] float flySpeed = 50;
+
+    [SerializeField] float walkTurnSpeed = 6;
     [SerializeField] float runTurnSpeed = 24;
     [SerializeField] float flyTurnSpeed = 30;
     float turnSpeed;
-    [SerializeField] float flySpeed = 50;
-    [SerializeField] float jumpForce = 10;
+    [SerializeField] float jumpForce = 50;
 
-    bool isAirBorne = false;
     bool useJetPark = false;
     bool hasFailed = false;
 
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 movementInput;
     float jetParkUpDownInput = 0f;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,9 +42,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get WASD key input
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            ToggleJetParkOnOff();
+        }
 
         if (useJetPark)
         {
@@ -65,44 +67,78 @@ public class PlayerController : MonoBehaviour
             jetParkUpDownInput = 0f;
         }
 
+        SetAnimAndMoveSpeed();
+
+        playerAnim.SetFloat("Speed", speed);
+
+        // Get WASD key input
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
         // Create vector3 movement with input
         movementInput = new Vector3(horizontalInput, jetParkUpDownInput, verticalInput).normalized;
-
-        isAirBorne = !playerCollusion.isOnGround && !useJetPark;
-
-        SetAnimAndMoveSpeed();
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            ToggleJetParkOnOff();
-        }
-
     }
 
-    // FixedUpdate is good for physics-related updates
     void FixedUpdate()
     {
-        if (IsRunning() && IsMoving())
-        {
-            Run();
-        }
-        else if (IsMoving())
-        {
-            Walk();
-        }
-        else
-        {
-            Idle();
-        }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
         }
 
-        Fly();
+        Move();
         AirBorne();
+
+
+    }
+
+    void ToggleJetParkOnOff()
+    {
+        if (useJetPark)
+        {
+            useJetPark = false;
+
+            playerRb.useGravity = true;
+            playerAnim.SetBool("IsFlying", false);
+
+            GameObjectsManager.Instance.SetPlayerJetParkIsOn(false);
+            Debug.Log("Jetpark is off");
+        }
+        else
+        {
+            useJetPark = true;
+
+            playerAnim.speed = 0.4f;
+
+            GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
+
+            playerRb.AddForce(Vector3.up * 5.0f, ForceMode.Impulse);
+            playerRb.useGravity = false;
+
+            Debug.Log("Jetpark is on");
+        }
+    }
+
+    void AirBorne()
+    {
+        if (!playerCollusion.isOnGround && !useJetPark)
+        {
+            playerAnim.SetTrigger("AirBorne");
+        }
+        else if (playerCollusion.wasAirBorne && playerCollusion.isOnGround)
+        {
+            playerAnim.SetBool("IsAirBorne", false);
+            playerCollusion.wasAirBorne = false;
+        }
+    }
+
+    void Jump()
+    {
+        if (playerCollusion.isOnGround)
+        {
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerCollusion.isOnGround = false;
+        }
     }
 
     void Move()
@@ -110,7 +146,14 @@ public class PlayerController : MonoBehaviour
         // Calculate the desired velocity
         Vector3 desiredVelocity = movementInput * speed;
 
-        playerRb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z); //playerRb.linearVelocity.y
+        if (useJetPark)
+        {
+            playerRb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z);
+        }
+        else
+        {
+            playerRb.linearVelocity = new Vector3(desiredVelocity.x, playerRb.linearVelocity.y, desiredVelocity.z);
+        }
 
         // Make the player face the direction of movement
         if (jetParkUpDownInput == 0f && movementInput.magnitude > 0.01f)
@@ -124,27 +167,6 @@ public class PlayerController : MonoBehaviour
             // Apply the rotation to the Rigidbody
             playerRb.MoveRotation(rotatePlayer);
         }
-    }
-
-    void Walk()
-    {
-        if (playerCollusion.isOnGround)
-        {
-            playerAnim.SetBool("IsMoving", true);
-            playerAnim.SetBool("IsRunning", false);
-            Move();
-        }
-
-    }
-
-    void Run()
-    {
-        if (playerCollusion.isOnGround)
-        {
-            playerAnim.SetBool("IsRunning", true);
-            Move();
-        }
-
     }
 
     void SetAnimAndMoveSpeed()
@@ -167,86 +189,10 @@ public class PlayerController : MonoBehaviour
             turnSpeed = flyTurnSpeed;
             playerAnim.speed = 1f;
         }
-    }
-
-    void Jump()
-    {
-        if (playerCollusion.isOnGround)
-        {
-            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            playerCollusion.isOnGround = false;
-        }
-    }
-
-/*    void SetJumpForce()
-    {
-        if (IsRunning())
-        {
-            jumpForce = runJumpForce;
-        }
-        else if (IsMoving())
-        {
-            jumpForce = walkJumpForce;
-        }
         else
         {
-            jumpForce = idleJumpForce;
-            isIdleJump = true;
+            speed = 0;
         }
-    }*/
-
-    void ToggleJetParkOnOff()
-    {
-        if (useJetPark)
-        {
-            useJetPark = false;
-            GameObjectsManager.Instance.SetPlayerJetParkIsOn(false);
-            Debug.Log("Jetpark is off");
-        }
-        else
-        {
-            useJetPark = true;
-            playerAnim.speed = 0.4f;
-            GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
-            playerRb.AddForce(Vector3.up * 5.0f, ForceMode.Impulse);
-            Debug.Log("Jetpark is on");
-        }
-    }
-
-    void Fly()
-    {
-        if (useJetPark)
-        {
-            playerCollusion.isOnGround = false;
-            playerRb.useGravity = false;
-            playerAnim.SetBool("IsFlying", true);
-            Move();
-        }
-        else
-        {
-            playerRb.useGravity = true;
-            playerAnim.SetBool("IsFlying", false);
-        }
-    }
-
-    void AirBorne()
-    {
-        if (isAirBorne)
-        {
-            playerAnim.SetBool("AirBorne", true);
-        }
-        else
-        {
-            playerAnim.SetBool("AirBorne", false);
-        }
-
-    }
-
-    void Idle()
-    {
-        playerAnim.speed = 1f;
-        playerAnim.SetBool("IsMoving", false);
-        playerAnim.SetBool("IsRunning", false);
     }
 
     bool IsMoving()
