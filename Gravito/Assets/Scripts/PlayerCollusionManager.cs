@@ -23,4 +23,12 @@ public class PlayerCollusionManager : MonoBehaviour
             isOnGround = true;
         }
     }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = false;
+        }
+    }
 }

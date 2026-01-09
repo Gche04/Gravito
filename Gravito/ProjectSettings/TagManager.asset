@@ -4,9 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Vertical Floor
-  - Horizontal Floor
   - Ground
+  - Block
   layers:
   - Default
   - TransparentFX
