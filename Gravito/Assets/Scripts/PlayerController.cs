@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce = 50;
 
     bool useJetPark = false;
+    bool playerIsAirBorne = true;
     bool hasFailed = false;
 
     private List<KeyCode> wasdKeys = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
@@ -107,6 +108,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             useJetPark = true;
+            playerIsAirBorne = true;
 
             playerAnim.speed = 0.4f;
 
@@ -121,9 +123,9 @@ public class PlayerController : MonoBehaviour
 
     void AirBorne()
     {
-        if (!playerCollusion.isOnGround && !useJetPark)
+        if (!playerCollusion.isOnGround && !useJetPark && playerIsAirBorne)
         {
-            playerAnim.SetTrigger("AirBorne");
+            playerAnim.SetBool("IsAirBorne", true);
         }
         else if (playerCollusion.wasAirBorne && playerCollusion.isOnGround)
         {
@@ -138,6 +140,7 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             playerCollusion.isOnGround = false;
+            playerIsAirBorne = true;
         }
     }
 
@@ -167,6 +170,8 @@ public class PlayerController : MonoBehaviour
             // Apply the rotation to the Rigidbody
             playerRb.MoveRotation(rotatePlayer);
         }
+
+        if(playerCollusion.isOnGround) playerIsAirBorne = false;
     }
 
     void SetAnimAndMoveSpeed()

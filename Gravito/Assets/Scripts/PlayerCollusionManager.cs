@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerCollusionManager : MonoBehaviour
 {
     public bool isOnGround;
-    public bool  wasAirBorne;
+    public bool wasAirBorne;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,23 +14,39 @@ public class PlayerCollusionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Block"))
         {
-            isOnGround = true;
+            return;
         }
+        else
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isOnGround = true;
+            }
+        }
+
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Block"))
         {
-            isOnGround = false;
-            wasAirBorne = true;
+            return;
         }
+        else
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isOnGround = false;
+                wasAirBorne = true;
+            }
+        }
+
     }
 }

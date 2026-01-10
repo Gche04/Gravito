@@ -1090,9 +1090,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1e58be30d7f029645a4e6b640c0030b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1288015520}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1e58be30d7f029645a4e6b640c0030b1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1288015522}
   m_SourcePrefab: {fileID: 100100000, guid: 1e58be30d7f029645a4e6b640c0030b1, type: 3}
 --- !u!1 &1288015513 stripped
 GameObject:
@@ -1202,25 +1199,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCollusionManager
   isOnGround: 0
   wasAirBorne: 0
---- !u!114 &1288015522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1288015513}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ce2dd76f1cd5424d8352ee2745f0664, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerControl
-  walkSpeed: 2
-  runSpeed: 8
-  flySpeed: 50
-  walkTurnSpeed: 6
-  runTurnSpeed: 24
-  flyTurnSpeed: 30
-  jumpForce: 10
 --- !u!1001 &1618299212
 PrefabInstance:
   m_ObjectHideFlags: 0
