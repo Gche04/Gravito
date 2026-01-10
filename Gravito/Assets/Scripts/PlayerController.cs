@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce = 50;
 
     bool useJetPark = false;
-    bool playerIsAirBorne = true;
+    bool playerIsAirBorne = false;
     bool hasFailed = false;
 
     private List<KeyCode> wasdKeys = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour
 
             playerRb.useGravity = true;
             playerAnim.SetBool("IsFlying", false);
+            playerAnim.SetBool("IsAirBorne", true);
 
             GameObjectsManager.Instance.SetPlayerJetParkIsOn(false);
             Debug.Log("Jetpark is off");

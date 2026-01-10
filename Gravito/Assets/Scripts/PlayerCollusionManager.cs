@@ -19,34 +19,24 @@ public class PlayerCollusionManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Block"))
+
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            return;
+            isOnGround = true;
         }
-        else
-        {
-            if (collision.gameObject.CompareTag("Ground"))
-            {
-                isOnGround = true;
-            }
-        }
+
 
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Block"))
+
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            return;
+            isOnGround = false;
+            wasAirBorne = true;
         }
-        else
-        {
-            if (collision.gameObject.CompareTag("Ground"))
-            {
-                isOnGround = false;
-                wasAirBorne = true;
-            }
-        }
+
 
     }
 }
