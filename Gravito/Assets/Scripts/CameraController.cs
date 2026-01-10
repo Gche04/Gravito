@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     Vector3 cameraOffset;
 
     [SerializeField] Vector3 cameraPlayerFrontViewOffset = new(0, 1.4f, -7f);
-    [SerializeField] Vector3 cameraPlayerBackViewOffset = new(0, 1.4f, -4f);
+    [SerializeField] Vector3 cameraPlayerBackViewOffset = new(2, 1.4f, -4f);
     [SerializeField] Vector3 cameraSideViewOffset = new(0, 1f, -6f);
     float cameraMoveSpeed;
 

@@ -70,8 +70,13 @@ public class PlayerController : MonoBehaviour
             jetParkUpDownInput = 0f;
         }
 
-        if (playerCollusion.isOnGround) playerIsAirBorne = false;
-        if (useJetPark) playerCollusion.isOnGround = false;
+       // if (useJetPark && playerCollusion.isOnGround)
+        //{
+           // playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 2f, playerRb.linearVelocity.x);
+        //}
+        
+        //if (useJetPark) playerCollusion.isOnGround = false;
+        if (playerCollusion.isOnGround && !useJetPark) playerIsAirBorne = false;
 
         SetAnimAndMoveSpeed();
 
@@ -180,7 +185,7 @@ public class PlayerController : MonoBehaviour
 
     void SetAnimAndMoveSpeed()
     {
-        if (IsRunning() && !useJetPark)
+        if (IsRunning() && !useJetPark && !IsMoving())
         {
             speed = runSpeed;
             turnSpeed = runTurnSpeed;
