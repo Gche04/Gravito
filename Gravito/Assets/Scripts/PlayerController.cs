@@ -114,6 +114,8 @@ public class PlayerController : MonoBehaviour
             playerRb.AddForce(Vector3.up * 20.0f, ForceMode.Impulse);
             playerRb.useGravity = false;
 
+            playerAnim.SetBool("IsAirBorne", false);
+
             useJetPark = true;
             playerIsAirBorne = true;
 
