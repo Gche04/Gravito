@@ -33,7 +33,7 @@ public class PlayerCollusionManager : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = false;
+            //isOnGround = false;
             wasAirBorne = true;
         }
 

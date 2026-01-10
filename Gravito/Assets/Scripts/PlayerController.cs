@@ -23,9 +23,9 @@ public class PlayerController : MonoBehaviour
     bool playerIsAirBorne = false;
     bool hasFailed = false;
 
-    
-    List<KeyCode> wasdKeysAndUM = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.U, KeyCode.M };//u and m for jetpack y axis
-    //List<KeyCode> uAndMUpDownForJetPark = new() {  };
+
+    List<KeyCode> wasdKeys = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
+    List<KeyCode> uAndMUpDownForJetPark = new() { KeyCode.U, KeyCode.M, };
     List<KeyCode> shiftKeys = new() { KeyCode.LeftShift, KeyCode.RightShift };
 
     Vector3 movementInput;
@@ -70,6 +70,9 @@ public class PlayerController : MonoBehaviour
             jetParkUpDownInput = 0f;
         }
 
+        if (playerCollusion.isOnGround) playerIsAirBorne = false;
+        if (useJetPark) playerCollusion.isOnGround = false;
+
         SetAnimAndMoveSpeed();
 
         playerAnim.SetFloat("Speed", speed);
@@ -91,8 +94,6 @@ public class PlayerController : MonoBehaviour
 
         Move();
         AirBorne();
-
-
     }
 
     void ToggleJetParkOnOff()
@@ -110,15 +111,15 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            playerRb.AddForce(Vector3.up * 20.0f, ForceMode.Impulse);
+            playerRb.useGravity = false;
+
             useJetPark = true;
             playerIsAirBorne = true;
 
-            playerAnim.speed = 0.4f;
+            playerCollusion.isOnGround = false;
 
             GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
-
-            playerRb.AddForce(Vector3.up * 5.0f, ForceMode.Impulse);
-            playerRb.useGravity = false;
 
             Debug.Log("Jetpark is on");
         }
@@ -173,8 +174,6 @@ public class PlayerController : MonoBehaviour
             // Apply the rotation to the Rigidbody
             playerRb.MoveRotation(rotatePlayer);
         }
-
-        if(playerCollusion.isOnGround) playerIsAirBorne = false;
     }
 
     void SetAnimAndMoveSpeed()
@@ -194,12 +193,13 @@ public class PlayerController : MonoBehaviour
         else if (useJetPark && !IsMoving())
         {
             speed = -1; //hovering
+            playerAnim.speed = 1f;
         }
         else if (useJetPark && IsMoving())
         {
             speed = flySpeed;
             turnSpeed = flyTurnSpeed;
-            playerAnim.speed = 1f;
+            //playerAnim.speed = 1f;
         }
         else
         {
@@ -209,9 +209,19 @@ public class PlayerController : MonoBehaviour
 
     bool IsMoving()
     {
-        if (wasdKeysAndUM.Any(key => Input.GetKey(key)))
+        if (useJetPark)
         {
-            return true;
+            if (wasdKeys.Any(key => Input.GetKey(key)) || uAndMUpDownForJetPark.Any(key => Input.GetKey(key)))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (wasdKeys.Any(key => Input.GetKey(key)))
+            {
+                return true;
+            }
         }
         return false;
     }
