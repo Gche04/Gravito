@@ -7,12 +7,18 @@ public class CameraController : MonoBehaviour
 
     Vector3 cameraOffset;
 
+    //views are of player. player backing camera is back view
     [SerializeField] Vector3 cameraPlayerFrontViewOffset = new(0, 1.4f, -7f);
     [SerializeField] Vector3 cameraPlayerBackViewOffset = new(1.7f, 1.4f, -4f);
     [SerializeField] Vector3 cameraSideViewOffset = new(0, 1f, -6f);
+
+    [SerializeField] Vector3 jetpackFrontViewOffset = new(0.5f, 1.5f, -5.5f);
+    [SerializeField] Vector3 jetpackBackViewOffset = new(0.5f, 1.5f, -5.5f);
+    [SerializeField] Vector3 jetpackSideViewOffset = new(0, 1f, -6f);
+
     float cameraMoveSpeed;
 
-    [SerializeField] float cameraNormalMoveSpeed = 8;
+    [SerializeField] float cameraNormalMoveSpeed = 10;
     [SerializeField] float cameraJetParkMoveSpeed = 60;
 
 
@@ -33,7 +39,6 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        //TogglePlayerDirToCamera();
         SetCameraOffset();
 
         if (GameObjectsManager.Instance.PlayerJetParkIsOn)
@@ -62,94 +67,30 @@ public class CameraController : MonoBehaviour
 
     void SetCameraOffset()
     {
-        //if (GameObjectsManager.Instance.PlayerJetParkIsOn)
-        //{
-        //    cameraOffset = cameraSideViewOffset;
-        //}
-        /*else
+        if (GameObjectsManager.Instance.PlayerJetParkIsOn)
         {
-            if (IsPlayerFacingCamera())
-            {
-                cameraOffset = cameraPlayerFrontViewOffset;
-            }
-            else if (IsPlayerBackingCamera())
-            {
-                cameraOffset = cameraPlayerBackViewOffset;
-            }
-            else
-            {
-                cameraOffset = cameraSideViewOffset;
-            }
-        }*/
-        //else
-        //{
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-            {
-                cameraOffset = cameraSideViewOffset;
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                cameraOffset = cameraPlayerFrontViewOffset;
-            }
-            else if (Input.GetKey(KeyCode.W))
-            {
-                cameraOffset = cameraPlayerBackViewOffset;
-            }
-            
-        //}
-
+            cameraOffset = cameraSideViewOffset;
+            //CameraOffsetValue(jetpackSideViewOffset, jetpackFrontViewOffset, jetpackBackViewOffset);
+        }else
+        {
+            CameraOffsetValue(cameraSideViewOffset, cameraPlayerFrontViewOffset, cameraPlayerBackViewOffset);
+        }
     }
 
-
-    bool IsPlayerFacingCamera()
+    void CameraOffsetValue(Vector3 side, Vector3 front, Vector3 back)
     {
-        //Calculate the direction vector from the player to the camera
-        Vector3 directionToCamera = (mainCamera.transform.position - player.transform.position).normalized;
-
-        //Get the player's forward direction
-        Vector3 playerForward = player.transform.forward;
-
-        //Calculate the dot product between the two direction vectors
-        //dot product of 1 means the vectors are perfectly aligned (facing the same way).
-        //dot product of 0 means they are perpendicular.
-        //dot product of -1 means they are opposite (facing away).
-        float dotProduct = Vector3.Dot(playerForward, directionToCamera);
-
-        //Compare the dot product result with the threshold
-        // If the dot product is greater than the threshold, the player is facing the camera within the defined angle.
-        return dotProduct > 0.5f;
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            cameraOffset = side;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            cameraOffset = front;
+        }
+        else if (Input.GetKey(KeyCode.W))
+        {
+            cameraOffset = back;
+        }
     }
 
-    bool IsPlayerBackingCamera()
-    {
-        Vector3 directionToCamera = (mainCamera.transform.position - player.transform.position).normalized;
-
-        Vector3 playerForward = player.transform.forward;
-
-        float dotProduct = Vector3.Dot(playerForward, directionToCamera);
-
-        return dotProduct < -0.5f;
-    }
-
-    /*void TogglePlayerDirToCamera()
-    {
-        if (IsPlayerFacingCamera())
-        {
-            GameObjectsManager.Instance.SetPlayerIsFacingCamera(true);
-            GameObjectsManager.Instance.SetPlayerIsBackingCamera(false);
-            GameObjectsManager.Instance.SetPlayerSideIsToCamera(false);
-        }
-        else if (IsPlayerBackingCamera())
-        {
-            GameObjectsManager.Instance.SetPlayerIsBackingCamera(true);
-            GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
-            GameObjectsManager.Instance.SetPlayerSideIsToCamera(false);
-        }
-        else
-        {
-            GameObjectsManager.Instance.SetPlayerSideIsToCamera(true);
-            GameObjectsManager.Instance.SetPlayerIsBackingCamera(false);
-            GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
-        }
-    }*/
 }

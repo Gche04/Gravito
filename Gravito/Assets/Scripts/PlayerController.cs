@@ -69,11 +69,6 @@ public class PlayerController : MonoBehaviour
         {
             jetParkUpDownInput = 0f;
         }
-
-        //if (useJetPark && playerCollusion.isOnGround)
-        //{
-          //  transform.position = new Vector3(transform.position.x, 2f, transform.position.z);
-        //}
         
         if (useJetPark) playerCollusion.isOnGround = false;
         if (playerCollusion.isOnGround && !useJetPark) playerIsAirBorne = false;
@@ -88,8 +83,6 @@ public class PlayerController : MonoBehaviour
 
         // Create vector3 movement with input
         movementInput = new Vector3(horizontalInput, jetParkUpDownInput, verticalInput).normalized;
-
-        //Debug.Log("is on ground " + playerCollusion.isOnGround);
     }
 
     void FixedUpdate()
@@ -210,7 +203,6 @@ public class PlayerController : MonoBehaviour
         {
             speed = flySpeed;
             turnSpeed = flyTurnSpeed;
-            //playerAnim.speed = 1f;
         }
         else
         {
@@ -239,7 +231,6 @@ public class PlayerController : MonoBehaviour
 
     bool IsRunning()
     {
-        //Debug.Log("speed " + speed);
         if (shiftKeys.Any(key => Input.GetKey(key)))
         {
             return true;
