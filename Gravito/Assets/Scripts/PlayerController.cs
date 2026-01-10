@@ -23,8 +23,10 @@ public class PlayerController : MonoBehaviour
     bool playerIsAirBorne = false;
     bool hasFailed = false;
 
-    private List<KeyCode> wasdKeys = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
-    private List<KeyCode> shiftKeys = new() { KeyCode.LeftShift, KeyCode.RightShift };
+    
+    List<KeyCode> wasdKeysAndUM = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.U, KeyCode.M };//u and m for jetpack y axis
+    //List<KeyCode> uAndMUpDownForJetPark = new() {  };
+    List<KeyCode> shiftKeys = new() { KeyCode.LeftShift, KeyCode.RightShift };
 
     Vector3 movementInput;
     float jetParkUpDownInput = 0f;
@@ -189,7 +191,11 @@ public class PlayerController : MonoBehaviour
             turnSpeed = walkTurnSpeed;
             playerAnim.speed = 1.5f;
         }
-        else if (useJetPark)
+        else if (useJetPark && !IsMoving())
+        {
+            speed = -1; //hovering
+        }
+        else if (useJetPark && IsMoving())
         {
             speed = flySpeed;
             turnSpeed = flyTurnSpeed;
@@ -203,7 +209,7 @@ public class PlayerController : MonoBehaviour
 
     bool IsMoving()
     {
-        if (wasdKeys.Any(key => Input.GetKey(key)))
+        if (wasdKeysAndUM.Any(key => Input.GetKey(key)))
         {
             return true;
         }
