@@ -304,6 +304,8 @@ MonoBehaviour:
   cameraPlayerFrontViewOffset: {x: 0, y: 1.4, z: -7}
   cameraPlayerBackViewOffset: {x: 2, y: 1.4, z: -3}
   cameraSideViewOffset: {x: 0, y: 1, z: -6}
+  cameraNormalMoveSpeed: 8
+  cameraJetParkMoveSpeed: 80
 --- !u!4 &289104180
 Transform:
   m_ObjectHideFlags: 0

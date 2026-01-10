@@ -70,12 +70,12 @@ public class PlayerController : MonoBehaviour
             jetParkUpDownInput = 0f;
         }
 
-       // if (useJetPark && playerCollusion.isOnGround)
+        //if (useJetPark && playerCollusion.isOnGround)
         //{
-           // playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 2f, playerRb.linearVelocity.x);
+          //  transform.position = new Vector3(transform.position.x, 2f, transform.position.z);
         //}
         
-        //if (useJetPark) playerCollusion.isOnGround = false;
+        if (useJetPark) playerCollusion.isOnGround = false;
         if (playerCollusion.isOnGround && !useJetPark) playerIsAirBorne = false;
 
         SetAnimAndMoveSpeed();
@@ -88,6 +88,8 @@ public class PlayerController : MonoBehaviour
 
         // Create vector3 movement with input
         movementInput = new Vector3(horizontalInput, jetParkUpDownInput, verticalInput).normalized;
+
+        //Debug.Log("is on ground " + playerCollusion.isOnGround);
     }
 
     void FixedUpdate()
@@ -106,8 +108,10 @@ public class PlayerController : MonoBehaviour
         if (useJetPark)
         {
             useJetPark = false;
-
             playerRb.useGravity = true;
+
+            playerRb.AddForce(Vector3.up * 1.5f, ForceMode.Impulse);
+
             playerAnim.SetBool("IsFlying", false);
             playerAnim.SetBool("IsAirBorne", true);
 
@@ -185,7 +189,7 @@ public class PlayerController : MonoBehaviour
 
     void SetAnimAndMoveSpeed()
     {
-        if (IsRunning() && !useJetPark && !IsMoving())
+        if (IsRunning() && !useJetPark && IsMoving())
         {
             speed = runSpeed;
             turnSpeed = runTurnSpeed;
@@ -235,6 +239,7 @@ public class PlayerController : MonoBehaviour
 
     bool IsRunning()
     {
+        //Debug.Log("speed " + speed);
         if (shiftKeys.Any(key => Input.GetKey(key)))
         {
             return true;

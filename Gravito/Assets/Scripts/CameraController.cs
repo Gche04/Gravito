@@ -8,12 +8,12 @@ public class CameraController : MonoBehaviour
     Vector3 cameraOffset;
 
     [SerializeField] Vector3 cameraPlayerFrontViewOffset = new(0, 1.4f, -7f);
-    [SerializeField] Vector3 cameraPlayerBackViewOffset = new(2, 1.4f, -4f);
+    [SerializeField] Vector3 cameraPlayerBackViewOffset = new(1.7f, 1.4f, -4f);
     [SerializeField] Vector3 cameraSideViewOffset = new(0, 1f, -6f);
     float cameraMoveSpeed;
 
-    float cameraNormalMoveSpeed = 10;
-    float cameraJetParkMoveSpeed = 80;
+    [SerializeField] float cameraNormalMoveSpeed = 8;
+    [SerializeField] float cameraJetParkMoveSpeed = 60;
 
 
 
@@ -28,11 +28,12 @@ public class CameraController : MonoBehaviour
             Debug.LogError("camera or player is Null");
         }
 
+        cameraOffset = cameraPlayerBackViewOffset;
     }
 
     void Update()
     {
-        TogglePlayerDirToCamera();
+        //TogglePlayerDirToCamera();
         SetCameraOffset();
 
         if (GameObjectsManager.Instance.PlayerJetParkIsOn)
@@ -61,25 +62,41 @@ public class CameraController : MonoBehaviour
 
     void SetCameraOffset()
     {
-        if (GameObjectsManager.Instance.PlayerJetParkIsOn)
+        //if (GameObjectsManager.Instance.PlayerJetParkIsOn)
+        //{
+        //    cameraOffset = cameraSideViewOffset;
+        //}
+        /*else
         {
-            cameraOffset = cameraSideViewOffset;
-        }
-        else
-        {
-            if (GameObjectsManager.Instance.PlayerSideIsToCamera)
-            {
-                cameraOffset = cameraSideViewOffset;
-            }
-            else if (GameObjectsManager.Instance.PlayerIsBackingCamera)
-            {
-                cameraOffset = cameraPlayerBackViewOffset;
-            }
-            else if (GameObjectsManager.Instance.PlayerIsFacingCamera)
+            if (IsPlayerFacingCamera())
             {
                 cameraOffset = cameraPlayerFrontViewOffset;
             }
-        }
+            else if (IsPlayerBackingCamera())
+            {
+                cameraOffset = cameraPlayerBackViewOffset;
+            }
+            else
+            {
+                cameraOffset = cameraSideViewOffset;
+            }
+        }*/
+        //else
+        //{
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            {
+                cameraOffset = cameraSideViewOffset;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                cameraOffset = cameraPlayerFrontViewOffset;
+            }
+            else if (Input.GetKey(KeyCode.W))
+            {
+                cameraOffset = cameraPlayerBackViewOffset;
+            }
+            
+        //}
 
     }
 
@@ -114,7 +131,7 @@ public class CameraController : MonoBehaviour
         return dotProduct < -0.5f;
     }
 
-    void TogglePlayerDirToCamera()
+    /*void TogglePlayerDirToCamera()
     {
         if (IsPlayerFacingCamera())
         {
@@ -134,5 +151,5 @@ public class CameraController : MonoBehaviour
             GameObjectsManager.Instance.SetPlayerIsBackingCamera(false);
             GameObjectsManager.Instance.SetPlayerIsFacingCamera(false);
         }
-    }
+    }*/
 }
