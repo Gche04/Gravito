@@ -17,11 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float runTurnSpeed = 24;
     [SerializeField] float flyTurnSpeed = 30;
     float turnSpeed;
-    [SerializeField] float jumpForce = 50;
+    [SerializeField] float jumpForce = 6;
 
     bool useJetPark = false;
-    bool playerIsAirBorne = false;
-    bool hasFailed = false;
 
 
     List<KeyCode> wasdKeys = new() { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
@@ -54,11 +52,11 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.U))
             {
-                jetParkUpDownInput = 1.0f;
+                jetParkUpDownInput = 0.5f;
             }
             else if (Input.GetKey(KeyCode.M))
             {
-                jetParkUpDownInput = -1.0f;
+                jetParkUpDownInput = -0.5f;
             }
             else
             {
@@ -69,12 +67,8 @@ public class PlayerController : MonoBehaviour
         {
             jetParkUpDownInput = 0f;
         }
-        
-        if (useJetPark) playerCollusion.isOnGround = false;
-        if (playerCollusion.isOnGround && !useJetPark) playerIsAirBorne = false;
 
         SetAnimAndMoveSpeed();
-
         playerAnim.SetFloat("Speed", speed);
 
         // Get WASD key input
@@ -94,6 +88,7 @@ public class PlayerController : MonoBehaviour
 
         Move();
         AirBorne();
+
     }
 
     void ToggleJetParkOnOff()
@@ -119,10 +114,6 @@ public class PlayerController : MonoBehaviour
             playerAnim.SetBool("IsAirBorne", false);
 
             useJetPark = true;
-            playerIsAirBorne = true;
-
-            playerCollusion.isOnGround = false;
-
             GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
 
             Debug.Log("Jetpark is on");
@@ -131,14 +122,13 @@ public class PlayerController : MonoBehaviour
 
     void AirBorne()
     {
-        if (!playerCollusion.isOnGround && !useJetPark && playerIsAirBorne)
+        if (!playerCollusion.isOnGround && !useJetPark)
         {
             playerAnim.SetBool("IsAirBorne", true);
         }
-        else if (playerCollusion.wasAirBorne && playerCollusion.isOnGround)
+        else if (!useJetPark && playerCollusion.isOnGround)
         {
             playerAnim.SetBool("IsAirBorne", false);
-            playerCollusion.wasAirBorne = false;
         }
     }
 
@@ -147,8 +137,6 @@ public class PlayerController : MonoBehaviour
         if (playerCollusion.isOnGround)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            playerCollusion.isOnGround = false;
-            playerIsAirBorne = true;
         }
     }
 

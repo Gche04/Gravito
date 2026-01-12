@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 4174188703042890176}
   - component: {fileID: 519943137351523092}
   m_Layer: 0
-  m_Name: Ground
+  m_Name: Flat
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 6586001947262696810}
   m_Layer: 0
   m_Name: Block
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,7 +253,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5726081987681366355}
   - {fileID: 2356308141149073360}
+  - {fileID: 5726081987681366355}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

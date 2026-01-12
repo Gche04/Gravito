@@ -1189,7 +1189,7 @@ MonoBehaviour:
   walkTurnSpeed: 6
   runTurnSpeed: 24
   flyTurnSpeed: 30
-  jumpForce: 10
+  jumpForce: 6
 --- !u!114 &1288015520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1203,7 +1203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCollusionManager
   isOnGround: 0
-  wasAirBorne: 0
 --- !u!1001 &1618299212
 PrefabInstance:
   m_ObjectHideFlags: 0
