@@ -685,7 +685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &596937918
 Transform:
   m_ObjectHideFlags: 0
@@ -694,15 +694,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596937917}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07815916, y: -0, z: -0, w: 0.996941}
-  m_LocalPosition: {x: -0.0010000002, y: 0.411, z: -0.296}
+  m_LocalRotation: {x: 0.17649478, y: -0, z: -0, w: 0.98430157}
+  m_LocalPosition: {x: 0, y: 0.587, z: -0.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 896316517}
   - {fileID: 1693140815}
   m_Father: {fileID: 1288015521}
-  m_LocalEulerAnglesHint: {x: 8.966, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20.331, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1329,6 +1329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb5ea6b45231854d9034d4553de9073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticleController
+  usingJetIdle: {x: 0.0784591, y: 0, z: 0, w: 0.9969173}
+  usingJetMove: {x: 0.58778524, y: 0, z: 0, w: 0.809017}
 --- !u!1001 &1618299212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1491,14 +1493,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 596937918}
     m_Modifications:
     - target: {fileID: 737854407299527584, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.054800317
-      objectReference: {fileID: 0}
-    - target: {fileID: 737854407299527584, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.054800317
-      objectReference: {fileID: 0}
-    - target: {fileID: 737854407299527584, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.12199994
       objectReference: {fileID: 0}
@@ -1541,22 +1535,6 @@ PrefabInstance:
     - target: {fileID: 980783151040147698, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
       propertyPath: m_Name
       value: JetPack Flame Particle1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9039186267814982520, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.ctime0
-      value: 33230
-      objectReference: {fileID: 0}
-    - target: {fileID: 9039186267814982520, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.ctime1
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 9039186267814982520, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.key0.b
-      value: 0.9865566
-      objectReference: {fileID: 0}
-    - target: {fileID: 9039186267814982520, guid: b16ecd722d8061848b1ed33b6beddfce, type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.key0.r
-      value: 0.8207547
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

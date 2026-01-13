@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody playerRb;
     Animator playerAnim;
     PlayerCollusionManager playerCollusion;
+    ParticleController particle;
 
     float speed;
     [SerializeField] float walkSpeed = 2;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerCollusion = GetComponent<PlayerCollusionManager>();
+        particle = GetComponent<ParticleController>();
 
         if (playerAnim == null) Debug.LogError("Animator is Null");
     }
@@ -96,6 +98,7 @@ public class PlayerController : MonoBehaviour
         if (useJetPark)
         {
             useJetPark = false;
+            particle.ToggleFlameOnAndOff(useJetPark);
             playerRb.useGravity = true;
 
             playerRb.AddForce(Vector3.up * 1.5f, ForceMode.Impulse);
@@ -114,6 +117,7 @@ public class PlayerController : MonoBehaviour
             playerAnim.SetBool("IsAirBorne", false);
 
             useJetPark = true;
+            particle.ToggleFlameOnAndOff(useJetPark);
             GameObjectsManager.Instance.SetPlayerJetParkIsOn(true);
 
             Debug.Log("Jetpark is on");
@@ -186,11 +190,13 @@ public class PlayerController : MonoBehaviour
         {
             speed = -1; //hovering
             playerAnim.speed = 1f;
+            particle.ToggleFlameRotWithMoveAndIdle(false);
         }
         else if (useJetPark && IsMoving())
         {
             speed = flySpeed;
             turnSpeed = flyTurnSpeed;
+            particle.ToggleFlameRotWithMoveAndIdle(true);
         }
         else
         {
